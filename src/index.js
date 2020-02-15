@@ -101,6 +101,8 @@ class App extends Component {
       adminEthAddr,
       members,
       box,
+      space,
+      threadId
     } = this.props;
 
     if (!spaceName || !threadName) console.error('You must pass both spaceName and threadName props');
@@ -110,7 +112,7 @@ class App extends Component {
     if (!spaces.includes(spaceName)) return;
 
     let thread;
-    thread = await box.openThread(spaceName, threadName, threadOpts);
+    thread = await space.joinThread(threadName, this.state.threadOpts);
 
     // use static api first, as it's much quicker
     const dialogue = await thread.getPosts();
@@ -132,7 +134,6 @@ class App extends Component {
       if (ethereum) thread.onUpdate(() => this.updateComments())
     }
     );
-    console.log(dialogue)
   }
 
   fetchMe = async () => {
@@ -281,7 +282,7 @@ class App extends Component {
       loginFunction,
       members,
     } = this.props;
-    console.log(dialogue)
+
     const noWeb3 = (!ethereum || !Object.entries(ethereum).length) && !loginFunction;
     return (
       <div
