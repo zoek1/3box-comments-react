@@ -100,6 +100,7 @@ class App extends Component {
       threadName,
       adminEthAddr,
       members,
+      box,
     } = this.props;
 
     if (!spaceName || !threadName) console.error('You must pass both spaceName and threadName props');
@@ -108,14 +109,11 @@ class App extends Component {
     const spaces = await Box.listSpaces(adminEthAddr);
     if (!spaces.includes(spaceName)) return;
 
-    let box;
     let thread;
-    if (ethereum) {
-      box = await Box.create(ethereum);
-      thread = await box.openThread(spaceName, threadName, threadOpts);
-    }
+    thread = await box.openThread(spaceName, threadName, threadOpts);
+
     // use static api first, as it's much quicker
-    const dialogue = await Box.getThread(spaceName, threadName, adminEthAddr, members, threadOpts || {});
+    const dialogue = await thread.getPosts();
     const updatedDialogue = reorderComments(dialogue);
     const comments = filterComments(dialogue, "comment");
     const uniqueUsers = [...new Set(dialogue.map(x => x.author))];
@@ -134,6 +132,7 @@ class App extends Component {
       if (ethereum) thread.onUpdate(() => this.updateComments())
     }
     );
+    console.log(dialogue)
   }
 
   fetchMe = async () => {
@@ -242,7 +241,7 @@ class App extends Component {
 
     if (isBoxEmpty && loginFunction) await loginFunction();
     if (!hasAuthed) await this.openBox();
-  }
+  };
 
   toggleReplyInput = (postId) => {
     const { showReply } = this.state;
@@ -253,7 +252,7 @@ class App extends Component {
       value = postId;
     }
     this.setState({ showReply: value });
-  }
+  };
 
   render() {
     const {
@@ -282,7 +281,7 @@ class App extends Component {
       loginFunction,
       members,
     } = this.props;
-
+    console.log(dialogue)
     const noWeb3 = (!ethereum || !Object.entries(ethereum).length) && !loginFunction;
     return (
       <div

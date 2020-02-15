@@ -46,13 +46,14 @@ export const sortChronologically = (threadPosts) => {
 }
 
 const buildCommentsTree = (comments, table) => {
-  if (!comments.length) return;
+  if (!comments.length) return [[], table];
   let deletedComments = [];
 
   comments.forEach(c => {
     const msg = c.message;
+    console.log(msg);
     if (!msg.parentId) return;
-
+    console.log('TIene padre')
     let parent = table[msg.parentId];
 
     let parentWasDeleted;
