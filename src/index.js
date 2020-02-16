@@ -281,6 +281,7 @@ class App extends Component {
       useHovers,
       loginFunction,
       members,
+      canPost
     } = this.props;
 
     const noWeb3 = (!ethereum || !Object.entries(ethereum).length) && !loginFunction;
@@ -291,6 +292,7 @@ class App extends Component {
         ${isMobile ? 'comment-mobile' : 'comment-desktop'}
         `}
       >
+        { canPost() &&
         <Input
           currentUserAddr={currentUserAddr}
           currentUser3BoxProfile={currentUser3BoxProfile}
@@ -300,7 +302,7 @@ class App extends Component {
           ethereum={ethereum}
           adminEthAddr={adminEthAddr}
           box={box}
-          loginFunction={loginFunction}
+          loginFunction={() => {}}
           isLoading3Box={isLoading3Box}
           members={members}
           hasAuthed={hasAuthed}
@@ -310,7 +312,7 @@ class App extends Component {
           openBox={this.openBox}
           login={this.login}
         />
-
+        }
         <Context
           dialogueLength={dialogueLength}
           isLoading={isLoading}
